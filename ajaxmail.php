@@ -1,37 +1,42 @@
 <?php
-$un=$_POST['username'];
-$em=$_POST['useremail'];
-$msg=$_POST['mesg'];
-if(trim($un)!="Your Name" && trim($msg)!="Your message" && trim($em)!="Your Email" && trim($un)!="" && trim($msg)!="" && trim($em)!="")
-{
-	if(filter_var($em, FILTER_VALIDATE_EMAIL))
-	{
-		$message="Hi Admin..<p>".$un." has sent a query having email id as ".$em." </p><p>Message is : ".$msg."</p>";
-		
-		$message_user="Hi ".$un."<p> Thank you so much for your valuable comments. <br> Our Support team will get back to you ASAP.</p><p>Have a great day ahead.</p>";
-		
+if(isset($_POST) && !empty($_POST)){
+	$full_name = (isset($_POST['full_name']))?$_POST['full_name']:'';
+	$email = (isset($_POST['email']))?$_POST['email']:'';
+	$subject = (isset($_POST['subject']))?$_POST['subject']:'';
+	$message = (isset($_POST['message']))?$_POST['message']:'';
+	
+	$form_type = 'contact';
+	$sendMessage = $mailSubject = '';
+	
+	if($form_type == 'contact'){
+		$mailSubject = 'Contact Details';
+		$sendMessage = "<p>Message by Health Care</p><p>Hello,</p><p>".$full_name." has sent a message having </p><p><b>Subject:</b> ".$subject."</p><p><b>Email id:</b> ".$email."</p><p><b>Query is:</b> ".$message."</p>";
+	}elseif($_POST['form_type'] == 'inquiry'){
+		$mailSubject = 'Inquiry Details';
+		$sendMessage = '';
+	}
+	
+	if($sendMessage != ''){
+		$fromEmail = 'support@himanshusofttech.com';
+		$toEmail = 'vikas.mukati@himanshusofttech.com';
 		
 		$headers = "MIME-Version: 1.0" . "\r\n";
 		$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-		$headers .= 'From: <support@healthcare.com>' . "\r\n";
+		$headers .= "From: <$fromEmail>" . "\r\n";
 
-		if(mail('shubham.choudhary@himanshusofttech.com','Query for Healthcare',$message,$headers ))
-		{
-			if($_POST['check']==1)
-			{
-				mail($em,'Reply from Health Care Template Team',$message_user,$headers );
-			}
-		echo '1#<p style="color:green;">Mail has been sent successfully.</p>';
+		if(mail($toEmail , $mailSubject , $sendMessage , $headers )){
+		    
+			echo 1;
+			
+		}else{
+			echo 0;
 		}
-		else
-		{
-		echo '2#<p style="color:red;">Please, Try Again.</p>';
-		}
+	}else{
+		echo 0;
 	}
-	else
-		echo '2#<p style="color:red">Please, provide valid Email.</p>';
+}else{
+	echo 0;
 }
-else
-{
-echo '2#<p style="color:red">Please, fill all the details.</p>';
-}?>
+die();
+?>
+
