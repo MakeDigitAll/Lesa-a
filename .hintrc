@@ -3,17 +3,17 @@
     "development"
   ],
   "hints": {
-    "no-inline-styles": "off",
-    "axe/parsing": [
+    "axe/text-alternatives": [
       "default",
       {
-        "duplicate-id-active": "off"
+        "image-alt": "off"
       }
     ],
-    "axe/forms": [
+    "axe/name-role-value": [
       "default",
       {
-        "label": "off"
+        "button-name": "off",
+        "link-name": "off"
       }
     ]
   }
